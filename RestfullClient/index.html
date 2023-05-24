@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<input type="button" value="getList" onclick="getList()"><br>
+<input type="button" value="createPerson" onclick="createPerson()"><br>
+
+<div id="result"></div>
+
+<script>
+    url="http://localhost:8080/hrApp_war_exploded/api/f1/person";
+    ider=0;
+    function getList(){
+        fetch(url, { headers: { "Content-Type": "application/json; charset=utf-8" }})
+          .then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
+          .then( persons => {
+              document.getElementById("result").innerHTML = ""
+              persons.forEach(person =>
+                  document.getElementById("result").innerHTML =  document.getElementById("result").innerHTML +  person.id  + ' ' + person.name + ' ' + person.email +'<br>'
+          )
+            })
+            .catch(err => {
+                console.log( err)
+            });
+    }
+
+    function createPerson(){
+        ider++;
+        let personData =
+            {id:ider,
+            name: "Nikos"+ ider,
+            email:"nikos@mail.fr"
+        };
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(personData)    })
+          .then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
+            .then( person => {
+                document.getElementById("result").innerHTML = ""
+                document.getElementById("result").innerHTML = person.id  + ' ' +person.name + ' ' + person.email
+            })
+            .catch(err => {
+                console.log( err)
+            });
+    }
+
+
+
+</script>
+
+
+</body>
+</html>
